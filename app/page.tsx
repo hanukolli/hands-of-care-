@@ -5,6 +5,7 @@ import Impact from "@/components/Impact";
 import PackageContents from "@/components/PackageContents";
 import Safety from "@/components/Safety";
 import WhoWeServe from "@/components/WhoWeServe";
+import MonthlyFeature from "@/components/MonthlyFeature";
 import Team from "@/components/Team";
 import GetInvolved from "@/components/GetInvolved";
 import Footer from "@/components/Footer";
@@ -19,6 +20,7 @@ export default function Home() {
       <PackageContents />
       <Safety />
       <WhoWeServe />
+      <MonthlyFeature />
       <Team />
       <GetInvolved />
       <Footer />
