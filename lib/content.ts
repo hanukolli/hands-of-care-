@@ -80,3 +80,5 @@ export const patientBenefits = [
 ];
 
 export const cities = ["Raleigh", "Durham", "Chapel Hill"];
+export const hospitals = ["WakeMed", "Duke", "UNC Health"];
+
