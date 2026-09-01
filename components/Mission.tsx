@@ -48,4 +48,4 @@ export default function Mission() {
       </Reveal>
     </section>
   );
-} add floating hospital tags,"
+
