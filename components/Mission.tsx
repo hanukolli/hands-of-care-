@@ -1,4 +1,13 @@
 import Reveal from "./Reveal";
+import Tag from "./Tag";
+import Parallax from "./Parallax";
+import { hospitals } from "@/lib/content";
+
+const hospitalStyles = [
+  { bg: "bg-coral", fg: "text-linen", rotate: -3 },
+  { bg: "bg-teal", fg: "text-linen", rotate: 2 },
+  { bg: "bg-peach", fg: "text-ink", rotate: -2 },
+];
 
 export default function Mission() {
   return (
@@ -14,9 +23,29 @@ export default function Mission() {
           Founded by two students who wanted hospital stays to feel a little
           less lonely, Hands of Care has grown into a small team focused on
           one job: getting useful, comforting, hospital-safe items into the
-          hands of patients who need them.
+          hands of patients at WakeMed, Duke, and UNC Health.
         </p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-5 [perspective:600px]">
+          {hospitals.map((hospital, i) => {
+            const s = hospitalStyles[i % hospitalStyles.length];
+            return (
+              <Parallax key={hospital}>
+                <Tag
+                  bg={s.bg}
+                  rotate={s.rotate}
+                  withHole={false}
+                  className="px-5 py-2.5"
+                >
+                  <span className={`font-body text-sm font-semibold ${s.fg}`}>
+                    {hospital}
+                  </span>
+                </Tag>
+              </Parallax>
+            );
+          })}
+        </div>
       </Reveal>
     </section>
   );
-}
+} add floating hospital tags,"
