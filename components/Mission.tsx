@@ -1,7 +1,7 @@
 import Reveal from "./Reveal";
 import Tag from "./Tag";
 import Parallax from "./Parallax";
-import { hospitals } from "@/lib/content";
+import { hospitals, hospitalsNote } from "@/lib/content";
 
 const hospitalStyles = [
   { bg: "bg-coral", fg: "text-linen", rotate: -3 },
@@ -45,6 +45,9 @@ export default function Mission() {
             );
           })}
         </div>
+        <p className="mx-auto mt-6 max-w-md font-body text-sm text-ink/60">
+          {hospitalsNote}
+        </p>
       </Reveal>
     </section>
   );
