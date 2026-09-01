@@ -81,4 +81,28 @@ export const patientBenefits = [
 
 export const cities = ["Raleigh", "Durham", "Chapel Hill"];
 export const hospitals = ["WakeMed", "Duke", "UNC Health"];
+export const hospitalsNote =
+  "We currently send care packages to WakeMed, Duke, and UNC Health — and we're hoping to expand to more hospitals soon.";
 
+export const monthlyFeature = {
+  eyebrow: "Monthly awareness feature",
+  title: "A different diagnosis, every month.",
+  intro:
+    "Each month, Hands of Care spotlights a lesser-known or under-discussed disease or health condition — sharing facts, resources, and stories with our community.",
+  ctaText: "Follow along for this month's spotlight",
+  // Set a topic for any month; leave it null for "Topic TBA".
+  months: [
+    { month: "January", topic: null },
+    { month: "February", topic: null },
+    { month: "March", topic: null },
+    { month: "April", topic: null },
+    { month: "May", topic: null },
+    { month: "June", topic: null },
+    { month: "July", topic: null },
+    { month: "August", topic: null },
+    { month: "September", topic: "Mental health disorders" },
+    { month: "October", topic: null },
+    { month: "November", topic: null },
+    { month: "December", topic: null },
+  ],
+};
