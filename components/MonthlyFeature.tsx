@@ -284,4 +284,3 @@ export default function MonthlyFeature() {
     </section>
   );
 }
-interface 
