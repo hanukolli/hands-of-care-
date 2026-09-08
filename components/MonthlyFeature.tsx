@@ -144,8 +144,8 @@ export default function MonthlyFeature() {
           </div>
         </div>
 
-        {/* 4x3 Grid for 12 Months */}
-        <Reveal delay={80} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {/* 4x3 Grid Layout */}
+        <Reveal delay={80} className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentMonths.map((m, i) => {
             const isOpen = openMonth === m.name;
             const isSeptember = m.name === "September";
@@ -159,28 +159,28 @@ export default function MonthlyFeature() {
                     : "border-ink/10 bg-white/70 hover:bg-white hover:border-ink/20"
                 }`}
               >
-                {/* Dropdown Toggle Button */}
+                {/* Month Card Header */}
                 <button
                   type="button"
                   onClick={() => toggleDropdown(m.name)}
                   className="flex w-full items-center justify-between p-4 text-left transition focus:outline-none"
                 >
                   <div className="flex items-center gap-2.5">
-                    <div className="rounded-xl bg-teal-light/60 p-1.5">
+                    <div className="rounded-xl bg-teal-light/60 p-2">
                       {MedicalIcons[i % 4]}
                     </div>
                     <div>
-                      <h4 className="font-display text-sm font-bold text-ink leading-tight">
+                      <h4 className="font-display text-base font-bold text-ink leading-tight">
                         {m.displayName}
                       </h4>
                       <p className="font-body text-[0.7rem] text-ink/50 mt-0.5">
-                        {isOpen ? "Click to collapse" : "Click to view dates"}
+                        {isOpen ? "Click to collapse" : "Click to view days"}
                       </p>
                     </div>
                   </div>
 
                   <div
-                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/5 text-xs text-ink/70 transition-transform duration-300 ${
+                    className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink/5 text-ink/70 transition-transform duration-300 ${
                       isOpen ? "rotate-180 bg-teal text-linen" : ""
                     }`}
                   >
@@ -188,24 +188,24 @@ export default function MonthlyFeature() {
                   </div>
                 </button>
 
-                {/* Dropdown Calendar View */}
+                {/* Expanded Month Calendar */}
                 {isOpen && (
                   <div className="border-t border-ink/10 bg-teal-light/10 p-3">
-                    {/* Weekday Labels */}
-                    <div className="mb-1.5 grid grid-cols-7 text-center font-mono text-[0.65rem] font-bold text-ink/50">
+                    {/* Days Header */}
+                    <div className="mb-1 grid grid-cols-7 text-center font-mono text-[0.65rem] font-bold text-ink/50">
                       {weekDays.map((day, idx) => (
                         <span key={idx}>{day}</span>
                       ))}
                     </div>
 
-                    {/* Day Grid with Direct Link to Instagram */}
-                    <div className="grid grid-cols-7 gap-1 text-center font-mono text-[0.7rem]">
-                      {/* Empty padding cells for calendar offset */}
+                    {/* Day Grid */}
+                    <div className="grid grid-cols-7 gap-1 text-center font-mono text-xs text-ink">
+                      {/* Empty padding cells */}
                       {Array.from({ length: m.startDayOfWeek }).map((_, idx) => (
-                        <div key={`empty-${idx}`} className="h-9" />
+                        <div key={`empty-${idx}`} className="h-10 rounded-md bg-transparent" />
                       ))}
 
-                      {/* Days of Month */}
+                      {/* Day cells (Clicking opens Instagram) */}
                       {Array.from({ length: m.daysCount }).map((_, idx) => {
                         const dayNum = idx + 1;
                         const accentColor = accents[idx % accents.length];
@@ -216,15 +216,19 @@ export default function MonthlyFeature() {
                             href={site.instagramUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={`View post for ${m.name} ${dayNum} on Instagram`}
-                            className={`flex h-9 flex-col items-center justify-between rounded-lg border p-1 transition hover:-translate-y-0.5 hover:shadow-xs focus-ring ${
+                            className={`flex h-10 flex-col justify-between rounded-lg border p-1 transition hover:-translate-y-0.5 hover:shadow-xs ${
                               isSeptember
                                 ? "border-teal/30 bg-white hover:border-teal"
                                 : "border-ink/5 bg-white/80 hover:border-teal/50"
                             }`}
                           >
-                            <span className="font-bold text-teal leading-none">{dayNum}</span>
-                            <span className={`h-1 w-1 rounded-full ${accentColor}`} />
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-[0.7rem] text-teal">{dayNum}</span>
+                              <span className={`h-1 w-1 rounded-full ${accentColor}`} />
+                            </div>
+                            <span className="truncate text-left font-body text-[0.55rem] font-medium text-ink/60">
+                              {isSeptember ? "TBA" : "TBA"}
+                            </span>
                           </a>
                         );
                       })}
@@ -236,7 +240,7 @@ export default function MonthlyFeature() {
           })}
         </Reveal>
 
-        {/* Bottom CTA */}
+        {/* Call To Action */}
         <Reveal
           delay={160}
           className="mt-12 flex flex-wrap items-center justify-center gap-3 text-center"
