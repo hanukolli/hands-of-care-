@@ -60,7 +60,7 @@ export default function MonthlyFeature() {
           <p className="font-body text-sm text-ink/70">
             {monthlyFeature.ctaText}
           </p>
-          
+          <a
             href={site.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
