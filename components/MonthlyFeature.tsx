@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Reveal from "./Reveal";
 import { monthlyFeature, site } from "@/lib/content";
 
-// Cute Medical Icons for each month
+// Cute Medical Icons
 const MedicalIcons: Record<number, React.ReactNode> = {
   0: (
     <svg className="w-5 h-5 text-teal shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -41,7 +41,7 @@ interface MonthData {
   name: string;
   displayName: string;
   daysCount: number;
-  startDayOfWeek: number; // 0 = Sun, 1 = Mon, ...
+  startDayOfWeek: number; // 0 = Sun, 1 = Mon...
   badge?: string;
 }
 
@@ -92,17 +92,17 @@ const accents = ["bg-teal", "bg-coral", "bg-peach", "bg-mint"];
 
 export default function MonthlyFeature() {
   const [year, setYear] = useState<2026 | 2027>(2026);
-  const [openMonth, setOpenMonth] = useState<string | null>("September"); // Default open September
+  const [selectedMonth, setSelectedMonth] = useState<MonthData | null>(null);
 
   const currentMonths = year === 2026 ? months2026 : months2027;
 
-  const toggleDropdown = (monthName: string) => {
-    setOpenMonth((prev) => (prev === monthName ? null : monthName));
+  const toggleMonth = (m: MonthData) => {
+    setSelectedMonth((prev) => (prev?.name === m.name ? null : m));
   };
 
   return (
     <section id="awareness" className="border-y border-ink/10 bg-teal-light/40 py-20">
-      <div className="mx-auto max-w-5xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <Reveal className="mb-8 max-w-xl">
           <span className="eyebrow text-teal">{monthlyFeature.eyebrow}</span>
           <h2 className="mt-3 font-display text-3xl font-semibold text-ink sm:text-4xl">
@@ -111,18 +111,21 @@ export default function MonthlyFeature() {
           <p className="mt-4 font-body text-ink/70">{monthlyFeature.intro}</p>
         </Reveal>
 
-        {/* Year Switcher Header */}
+        {/* Year Switcher */}
         <div className="mb-8 flex items-center justify-between border-b border-ink/10 pb-4">
           <div className="flex items-center gap-3">
             <h3 className="font-display text-4xl font-bold tracking-tight text-ink">{year}</h3>
             <span className="rounded-full bg-teal/10 px-3 py-1 font-mono text-xs font-semibold text-teal">
-              Interactive Calendar
+              Calendar
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setYear(2026)}
+              onClick={() => {
+                setYear(2026);
+                setSelectedMonth(null);
+              }}
               className={`rounded-lg px-4 py-2 font-body text-sm font-medium transition ${
                 year === 2026
                   ? "bg-teal text-linen shadow-xs"
@@ -132,7 +135,10 @@ export default function MonthlyFeature() {
               2026
             </button>
             <button
-              onClick={() => setYear(2027)}
+              onClick={() => {
+                setYear(2027);
+                setSelectedMonth(null);
+              }}
               className={`rounded-lg px-4 py-2 font-body text-sm font-medium transition ${
                 year === 2027
                   ? "bg-teal text-linen shadow-xs"
@@ -144,107 +150,122 @@ export default function MonthlyFeature() {
           </div>
         </div>
 
-        {/* Dropdown Months Accordion List */}
-        <Reveal delay={80} className="space-y-4">
+        {/* 4x3 Grid Layout for Months */}
+        <Reveal delay={80} className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {currentMonths.map((m, i) => {
-            const isOpen = openMonth === m.name;
-            const isSeptember = m.name === "September";
+            const isOpen = selectedMonth?.name === m.name;
+            const isSep = m.name === "September";
 
             return (
-              <div
+              <button
                 key={m.name}
-                className={`overflow-hidden rounded-2xl border transition-all duration-300 ${
+                type="button"
+                onClick={() => toggleMonth(m)}
+                className={`group flex flex-col justify-between rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-md ${
                   isOpen
-                    ? "border-teal/40 bg-white shadow-md ring-1 ring-teal/20"
-                    : "border-ink/10 bg-white/70 hover:bg-white hover:border-ink/20"
+                    ? "border-teal bg-white ring-2 ring-teal ring-offset-2"
+                    : "border-ink/10 bg-white/70 hover:bg-white"
                 }`}
               >
-                {/* Dropdown Toggle Header */}
-                <button
-                  type="button"
-                  onClick={() => toggleDropdown(m.name)}
-                  className="flex w-full items-center justify-between p-5 text-left transition focus:outline-none"
-                >
-                  <div className="flex items-center gap-3">
+                <div>
+                  <div className="mb-3 flex items-center justify-between">
                     <div className="rounded-xl bg-teal-light/60 p-2">
                       {MedicalIcons[i % 4]}
                     </div>
-                    <div>
-                      <h4 className="font-display text-lg font-bold text-ink">
-                        {m.displayName}
-                      </h4>
-                      <p className="font-body text-xs text-ink/50">
-                        {isOpen ? "Click to collapse" : "Click to view month calendar"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {m.badge && (
-                      <span className="hidden rounded-full bg-teal/15 px-3 py-1 font-mono text-xs font-bold text-teal sm:inline-block">
-                        💚 {m.badge}
-                      </span>
-                    )}
-                    <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-full bg-ink/5 text-ink/70 transition-transform duration-300 ${
-                        isOpen ? "rotate-180 bg-teal text-linen" : ""
+                    <span
+                      className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold transition-transform duration-200 ${
+                        isOpen ? "rotate-180 bg-teal text-linen" : "bg-ink/5 text-ink/60"
                       }`}
                     >
                       ↓
-                    </div>
+                    </span>
                   </div>
-                </button>
 
-                {/* Expanded Full Month Calendar Content */}
-                {isOpen && (
-                  <div className="border-t border-ink/10 bg-teal-light/10 p-6">
-                    {/* Calendar Days Header */}
-                    <div className="mb-2 grid grid-cols-7 text-center font-mono text-xs font-bold text-ink/50">
-                      {weekDays.map((day, idx) => (
-                        <span key={idx}>{day}</span>
-                      ))}
-                    </div>
+                  <h4 className="font-display text-base font-bold text-ink leading-tight">
+                    {m.displayName}
+                  </h4>
+                </div>
 
-                    {/* Day Grid */}
-                    <div className="grid grid-cols-7 gap-1.5 text-center font-mono text-xs text-ink">
-                      {/* Empty padding cells for start of month */}
-                      {Array.from({ length: m.startDayOfWeek }).map((_, idx) => (
-                        <div key={`empty-${idx}`} className="h-14 rounded-lg bg-transparent" />
-                      ))}
-
-                      {/* Day cells */}
-                      {Array.from({ length: m.daysCount }).map((_, idx) => {
-                        const dayNum = idx + 1;
-                        const accentColor = accents[idx % accents.length];
-
-                        return (
-                          <div
-                            key={dayNum}
-                            className={`flex h-14 flex-col justify-between rounded-xl border p-2 transition hover:-translate-y-0.5 hover:shadow-xs ${
-                              isSeptember
-                                ? "border-teal/30 bg-white"
-                                : "border-ink/5 bg-white/80"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="font-bold text-teal">{dayNum}</span>
-                              <span className={`h-1.5 w-1.5 rounded-full ${accentColor}`} />
-                            </div>
-                            <span className="truncate text-left font-body text-[0.65rem] font-medium text-ink/60">
-                              {isSeptember ? "Mental Health TBA" : "Topic TBA"}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
+                <div className="mt-4 flex items-center justify-between border-t border-ink/5 pt-2">
+                  <span className="font-mono text-[0.65rem] text-ink/50">
+                    {m.daysCount} Days
+                  </span>
+                  <span className="font-mono text-[0.65rem] font-bold text-teal group-hover:underline">
+                    {isOpen ? "Close" : "Expand"}
+                  </span>
+                </div>
+              </button>
             );
           })}
         </Reveal>
 
-        {/* Call To Action */}
+        {/* Full Interactive Calendar Dropdown Panel when a Month is Clicked */}
+        {selectedMonth && (
+          <div className="mt-8 rounded-2xl border border-teal/30 bg-white p-6 shadow-lg transition-all duration-300">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-ink/10 pb-4">
+              <div className="flex items-center gap-3">
+                <span className="font-display text-2xl font-bold text-ink">
+                  {selectedMonth.displayName} ({year})
+                </span>
+                {selectedMonth.badge && (
+                  <span className="rounded-full bg-teal text-linen px-3 py-1 text-xs font-semibold">
+                    💚 {selectedMonth.badge}
+                  </span>
+                )}
+              </div>
+
+              <button
+                onClick={() => setSelectedMonth(null)}
+                className="rounded-full bg-ink/5 px-4 py-1.5 font-body text-xs font-medium text-ink/70 hover:bg-ink/10"
+              >
+                ✕ Close Calendar
+              </button>
+            </div>
+
+            {/* Day Headers */}
+            <div className="mb-2 grid grid-cols-7 text-center font-mono text-xs font-bold text-ink/50">
+              {weekDays.map((day, idx) => (
+                <span key={idx}>{day}</span>
+              ))}
+            </div>
+
+            {/* Days Grid */}
+            <div className="grid grid-cols-7 gap-2 text-center font-mono text-xs text-ink">
+              {/* Padding before Day 1 */}
+              {Array.from({ length: selectedMonth.startDayOfWeek }).map((_, idx) => (
+                <div key={`empty-${idx}`} className="h-14 rounded-lg bg-transparent" />
+              ))}
+
+              {/* Day Cards */}
+              {Array.from({ length: selectedMonth.daysCount }).map((_, idx) => {
+                const dayNum = idx + 1;
+                const accentColor = accents[idx % accents.length];
+                const isSeptember = selectedMonth.name === "September";
+
+                return (
+                  <div
+                    key={dayNum}
+                    className={`flex h-14 flex-col justify-between rounded-xl border p-2 transition hover:-translate-y-0.5 ${
+                      isSeptember
+                        ? "border-teal/30 bg-teal-light/20"
+                        : "border-ink/10 bg-white"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-teal">{dayNum}</span>
+                      <span className={`h-1.5 w-1.5 rounded-full ${accentColor}`} />
+                    </div>
+                    <span className="truncate text-left font-body text-[0.65rem] font-medium text-ink/60">
+                      {isSeptember ? "Mental Health TBA" : "Topic TBA"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* CTA Section */}
         <Reveal
           delay={160}
           className="mt-12 flex flex-wrap items-center justify-center gap-3 text-center"
@@ -263,3 +284,4 @@ export default function MonthlyFeature() {
     </section>
   );
 }
+interface 
