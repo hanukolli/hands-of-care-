@@ -59,9 +59,15 @@ const months2026: MonthData[] = [
     displayName: "September: Mental Health Awareness", 
     daysCount: 30, 
     startDayOfWeek: 2, 
-    badge: "Mental Health Awareness" 
+    badge: "Mental Health" 
   },
-  { name: "October", displayName: "October", daysCount: 31, startDayOfWeek: 4 },
+  { 
+    name: "October", 
+    displayName: "October: Breast Cancer Awareness", 
+    daysCount: 31, 
+    startDayOfWeek: 4, 
+    badge: "Breast Cancer Awareness" 
+  },
   { name: "November", displayName: "November", daysCount: 30, startDayOfWeek: 0 },
   { name: "December", displayName: "December", daysCount: 31, startDayOfWeek: 2 },
 ];
@@ -80,9 +86,15 @@ const months2027: MonthData[] = [
     displayName: "September: Mental Health Awareness", 
     daysCount: 30, 
     startDayOfWeek: 3, 
-    badge: "Mental Health Awareness" 
+    badge: "Mental Health" 
   },
-  { name: "October", displayName: "October", daysCount: 31, startDayOfWeek: 5 },
+  { 
+    name: "October", 
+    displayName: "October: Breast Cancer Awareness", 
+    daysCount: 31, 
+    startDayOfWeek: 5, 
+    badge: "Breast Cancer Awareness" 
+  },
   { name: "November", displayName: "November", daysCount: 30, startDayOfWeek: 1 },
   { name: "December", displayName: "December", daysCount: 31, startDayOfWeek: 3 },
 ];
@@ -90,9 +102,18 @@ const months2027: MonthData[] = [
 const weekDays = ["S", "M", "T", "W", "T", "F", "S"];
 const accents = ["bg-teal", "bg-coral", "bg-peach", "bg-mint"];
 
+// Helper function to map October dates to their specific weekly topic
+const getOctoberTopic = (dayNum: number) => {
+  if (dayNum <= 3) return { title: "What Is Breast Cancer? 🎀", url: "https://www.instagram.com/p/DeA4gNMEZHH/?utm_source=ig_web_copy_link&stkn=MzRlODBiNWFlZA==" };
+  if (dayNum <= 10) return { title: "Know the Signs 🔍", url: site.instagramUrl };
+  if (dayNum <= 17) return { title: "Risk Factors & Genetics 🧬", url: site.instagramUrl };
+  if (dayNum <= 24) return { title: "Supporting Someone With Cancer 💗", url: site.instagramUrl };
+  return { title: "Beyond October 🎀", url: site.instagramUrl };
+};
+
 export default function MonthlyFeature() {
   const [year, setYear] = useState<2026 | 2027>(2026);
-  const [openMonth, setOpenMonth] = useState<string | null>("September");
+  const [openMonth, setOpenMonth] = useState<string | null>("October"); // Defaults to October open
 
   const currentMonths = year === 2026 ? months2026 : months2027;
 
@@ -148,6 +169,7 @@ export default function MonthlyFeature() {
         <Reveal delay={80} className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {currentMonths.map((m, i) => {
             const isOpen = openMonth === m.name;
+            const isOctober = m.name === "October";
             const isSeptember = m.name === "September";
 
             return (
@@ -200,34 +222,48 @@ export default function MonthlyFeature() {
 
                     {/* Day Grid */}
                     <div className="grid grid-cols-7 gap-1 text-center font-mono text-xs text-ink">
-                      {/* Empty padding cells */}
+                      {/* Empty padding cells for starting day */}
                       {Array.from({ length: m.startDayOfWeek }).map((_, idx) => (
-                        <div key={`empty-${idx}`} className="h-10 rounded-md bg-transparent" />
+                        <div key={`empty-${idx}`} className="h-11 rounded-md bg-transparent" />
                       ))}
 
-                      {/* Day cells (Clicking opens Instagram) */}
+                      {/* Day cells */}
                       {Array.from({ length: m.daysCount }).map((_, idx) => {
                         const dayNum = idx + 1;
                         const accentColor = accents[idx % accents.length];
 
+                        let dayTopic = "TBA";
+                        let targetUrl = site.instagramUrl;
+
+                        if (isOctober) {
+                          const octData = getOctoberTopic(dayNum);
+                          dayTopic = octData.title;
+                          targetUrl = octData.url;
+                        } else if (isSeptember) {
+                          dayTopic = "Mental Health TBA";
+                        }
+
                         return (
                           <a
                             key={dayNum}
-                            href={site.instagramUrl}
+                            href={targetUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`flex h-10 flex-col justify-between rounded-lg border p-1 transition hover:-translate-y-0.5 hover:shadow-xs ${
-                              isSeptember
+                            title={`Day ${dayNum}: ${dayTopic}`}
+                            className={`flex h-11 flex-col justify-between rounded-lg border p-1 transition hover:-translate-y-0.5 hover:shadow-xs ${
+                              dayNum === 3 && isOctober
+                                ? "border-coral bg-coral/10 ring-1 ring-coral/40"
+                                : isOctober
                                 ? "border-teal/30 bg-white hover:border-teal"
                                 : "border-ink/5 bg-white/80 hover:border-teal/50"
                             }`}
                           >
                             <div className="flex items-center justify-between">
-                              <span className="font-bold text-[0.7rem] text-teal">{dayNum}</span>
+                              <span className="font-bold text-[0.65rem] text-teal">{dayNum}</span>
                               <span className={`h-1 w-1 rounded-full ${accentColor}`} />
                             </div>
-                            <span className="truncate text-left font-body text-[0.55rem] font-medium text-ink/60">
-                              {isSeptember ? "TBA" : "TBA"}
+                            <span className="truncate text-left font-body text-[0.5rem] font-medium text-ink/70 leading-tight">
+                              {dayTopic}
                             </span>
                           </a>
                         );
